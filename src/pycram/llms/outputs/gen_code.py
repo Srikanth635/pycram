@@ -1,0 +1,1 @@
+PickUpAction(object_designator_description=ObjectDesignatorDescription(names=["mango"]), arms=["left", "right"], grasps=["top"])

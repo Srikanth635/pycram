@@ -1,0 +1,414 @@
+from abc import ABC, abstractmethod
+
+class DesignatorDescription(ABC):
+    """
+    :ivar resolve: The specialized_designators function to use for this designator, defaults to self.ground
+    """
+
+    def __init__(self, resolver: Optional[Callable] = None):
+        """
+        Create a Designator description.
+
+        :param resolver: The grounding method used for the description. The grounding method creates a location instance that matches the description.
+        :param ontology_concept_holders: A list of holders of ontology concepts that the designator is categorized as or associated with
+        """
+        if resolver is None:
+            self.resolve = self.ground
+
+    def ground(self) -> Any:
+        """
+        Should be overwritten with an actual grounding function which infers missing properties.
+        """
+        return self
+
+class ObjectDesignatorDescription(DesignatorDescription):
+    """
+    Class for object designator descriptions.
+    Descriptions hold possible parameter ranges for object designators.
+    """
+
+    @dataclass
+    class Object:
+        """
+        A single element that fits the description.
+        """
+
+        name: str
+        """
+        Name of the object
+        """
+
+        obj_type: ObjectType
+        """
+        Type of the object
+        """
+
+        world_object: Optional[WorldObject]
+        """
+        Reference to the World object
+        """
+
+        _pose: Optional[Callable] = field(init=False)
+        """
+        A callable returning the pose of this object. The _pose member is used overwritten for data copies
+        which will not update when the original world_object is moved.
+        """
+
+    def __init__(self, names: Optional[List[str]] = None, types: Optional[List[ObjectType]] = None,
+                 resolver: Optional[Callable] = None):
+        """
+        Base of all object designator descriptions. Every object designator has the name and type of the object.
+
+        :param names: A list of names that could describe the object
+        :param types: A list of types that could represent the object
+        :param resolver: An alternative specialized_designators that returns an object designator for the list of names and types
+        :param ontology_concept_holders: A list of ontology concepts that the object is categorized as or associated with
+        """
+        super().__init__(resolver)
+        self.types: Optional[List[ObjectType]] = types
+        self.names: Optional[List[str]] = names
+
+    def ground(self) -> Union[Object, bool]:
+        """
+        Return the first object from the world that fits the description.
+
+        :return: A resolved object designator
+        """
+        pass
+
+class LocationDesignatorDescription(DesignatorDescription):
+    """
+    Parent class of location designator descriptions.
+    """
+
+    @dataclass
+    class Location:
+        """
+        Resolved location that represents a specific point in the world which satisfies the constraints of the location
+        designator description.
+        """
+        pose: Pose
+        """
+        The resolved pose of the location designator. Pose is inherited by all location designator.
+        """
+
+    def __init__(self, resolver=None):
+        super().__init__(resolver)
+
+    def ground(self) -> Location:
+        """
+        Find a location that satisfies all constrains.
+        """
+        raise NotImplementedError(f"{type(self)}.ground() is not implemented.")
+
+class CostmapLocation(LocationDesignatorDescription):
+    """
+    Uses Costmaps to create locations for complex constrains
+    """
+
+    @dataclasses.dataclass
+    class Location(LocationDesignatorDescription.Location):
+        reachable_arms: List[str]
+        """
+        List of arms with which the pose can be reached, is only used when the 'rechable_for' parameter is used
+        """
+
+    def __init__(self, target: Union[Pose, ObjectDesignatorDescription.Object],
+                 reachable_for: Optional[ObjectDesignatorDescription.Object] = None,
+                 visible_for: Optional[ObjectDesignatorDescription.Object] = None,
+                 reachable_arm: Optional[str] = None, resolver: Optional[Callable] = None):
+        """
+        Location designator that uses costmaps as base to calculate locations for complex constrains like reachable or
+        visible. In case of reachable the resolved location contains a list of arms with which the location is reachable.
+
+        :param target: Location for which visibility or reachability should be calculated
+        :param reachable_for: Object for which the reachability should be calculated, usually a robot
+        :param visible_for: Object for which the visibility should be calculated, usually a robot
+        :param reachable_arm: An optional arm with which the target should be reached
+        :param resolver: An alternative specialized_designators that returns a resolved location for the given input of this description
+        """
+        super().__init__(resolver)
+        self.target: Union[Pose, ObjectDesignatorDescription.Object] = target
+        self.reachable_for: ObjectDesignatorDescription.Object = reachable_for
+        self.visible_for: ObjectDesignatorDescription.Object = visible_for
+        self.reachable_arm: Optional[str] = reachable_arm
+
+    def ground(self) -> Location:
+        """
+        Default specialized_designators which returns the first result from the iterator of this instance.
+
+        :return: A resolved location
+        """
+        pass
+    
+class SemanticCostmapLocation(LocationDesignatorDescription):
+    """
+    Locations over semantic entities, like a table surface
+    """
+
+    @dataclasses.dataclass
+    class Location(LocationDesignatorDescription.Location):
+        pass
+
+    def __init__(self, urdf_link_name, part_of, for_object=None, resolver=None):
+        """
+        Creates a distribution over a urdf link to sample poses which are on this link. Can be used, for example, to find
+        poses that are on a table. Optionally an object can be given for which poses should be calculated, in that case
+        the poses are calculated such that the bottom of the object is on the link.
+
+        :param urdf_link_name: Name of the urdf link for which a distribution should be calculated
+        :param part_of: Object of which the urdf link is a part
+        :param for_object: Optional object that should be placed at the found location
+        :param resolver: An alternative specialized_designators that creates a resolved location for the input parameter of this description
+        """
+        super().__init__(resolver)
+        self.urdf_link_name: str = urdf_link_name
+        self.part_of: ObjectDesignatorDescription.Object = part_of
+        self.for_object: Optional[ObjectDesignatorDescription.Object] = for_object
+
+    def ground(self) -> Location:
+        """
+        Default specialized_designators which returns the first element of the iterator of this instance.
+
+        :return: A resolved location
+        """
+        pass
+
+class ActionDesignatorDescription(DesignatorDescription):
+    """
+    Abstract class for action designator descriptions.
+    Descriptions hold possible parameter ranges for action designators.
+    """
+
+    @dataclass
+    class Action:
+        """
+        The performable designator with a single element for each list of possible parameter.
+        """
+        robot_position: Pose = field(init=False)
+        """
+        The position of the robot at the start of the action.
+        """
+        robot_torso_height: float = field(init=False)
+        """
+        The torso height of the robot at the start of the action.
+        """
+
+        robot_type: ObjectType = field(init=False)
+        """
+        The type of the robot at the start of the action.
+        """
+
+        def perform(self) -> Any:
+            """
+            Executes the action with the single parameters from the description.
+            """
+            raise NotImplementedError()
+
+        def ground(self) -> Action:
+            """Fill all missing parameters and chose plan to execute. """
+            raise NotImplementedError(f"{type(self)}.ground() is not implemented.")
+
+
+class MoveTorsoAction(ActionDesignatorDescription):
+    """
+    Action Designator for Moving the torso of the robot up and down
+    """
+
+    def __init__(self, positions: List[float], resolver=None):
+        """
+            Create a designator description to move the torso of the robot up and down.
+
+            :param positions: List of possible positions of the robots torso, possible position is a float of height in metres
+            :param resolver: An optional specialized_designators that returns a performable designator for a designator description.
+            :param ontology_concept_holders: A list of ontology concepts that the action is categorized as or associated with
+            """
+        pass
+
+    def ground(self) -> MoveTorsoActionPerformable:
+        """
+        Creates a performable action designator with the first element from the list of possible torso heights.
+
+        :return: A performable action designator
+        """
+        pass
+
+
+class PickUpAction(ActionDesignatorDescription):
+    """
+    Designator to let the robot pick up an object.
+    """
+
+    def __init__(self,
+                 object_designator_description: Union[ObjectDesignatorDescription, ObjectDesignatorDescription.Object],
+                 arms: List[str], grasps: List[str], resolver=None):
+        """
+        Lets the robot pick up an object. The description needs an object designator describing the object that should be
+        picked up, an arm that should be used as well as the grasp from which side the object should be picked up.
+
+        :param object_designator_description: List of possible object designator
+        :param arms: List of possible arms that could be used
+        :param grasps: List of possible grasps for the object
+        :param resolver: An optional specialized_designators that returns a performable designator with elements from the lists of possible paramter
+        :param ontology_concept_holders: A list of ontology concepts that the action is categorized as or associated with
+        """
+        pass
+
+    def ground(self) -> PickUpActionPerformable:
+        """
+        Default specialized_designators, returns a performable designator with the first entries from the lists of possible parameter.
+
+        :return: A performable designator
+        """
+        pass
+
+
+class PlaceAction(ActionDesignatorDescription):
+    """
+    Places an Object at a position using an arm.
+    """
+
+    def __init__(self,
+                 object_designator_description: Union[ObjectDesignatorDescription, ObjectDesignatorDescription.Object],
+                 target_locations: List[Pose],
+                 arms: List[str], resolver=None, ontology_concept_holders: Optional[List[Thing]] = None):
+        """
+        Create an Action Description to place an object
+
+        :param object_designator_description: Description of object to place.
+        :param target_locations: List of possible positions/orientations to place the object
+        :param arms: List of possible arms to use
+        :param resolver: Grounding method to resolve this designator
+        :param ontology_concept_holders: A list of ontology concepts that the action is categorized as or associated with
+        """
+        pass
+
+    def ground(self) -> PlaceActionPerformable:
+        """
+        Default specialized_designators that returns a performable designator with the first entries from the list of possible entries.
+
+        :return: A performable designator
+        """
+        pass
+
+
+class NavigateAction(ActionDesignatorDescription):
+    """
+    Navigates the Robot to a position.
+    """
+
+    def __init__(self, target_locations: List[Pose], resolver=None:
+        """
+        Navigates the robot to a location.
+
+        :param target_locations: A list of possible target locations for the navigation.
+        :param resolver: An alternative specialized_designators that creates a performable designator from the list of possible parameter
+        :param ontology_concept_holders: A list of ontology concepts that the action is categorized as or associated with
+        """
+        pass
+
+    def ground(self) -> NavigateActionPerformable:
+        """
+        Default specialized_designators that returns a performable designator with the first entry of possible target locations.
+
+        :return: A performable designator
+        """
+        pass
+
+
+
+@dataclass
+class ActionAbstract(ActionDesignatorDescription.Action, abc.ABC):
+    """Base class for performable performables."""
+
+    @abc.abstractmethod
+    def perform(self) -> None:
+        """
+        Perform the action.
+
+        Will be overwritten by each action.
+        """
+        pass
+
+@dataclass
+class MoveTorsoActionPerformable(ActionAbstract):
+    """
+    Move the torso of the robot up and down.
+    """
+    position: float
+    """
+    Target position of the torso joint
+    """
+
+    def perform(self) -> None:
+        """ Performs the action """
+        pass
+
+
+@dataclass
+class PickUpActionPerformable(ActionAbstract):
+    """
+    Let the robot pick up an object.
+    """
+
+    object_designator: ObjectDesignatorDescription.Object
+    """
+    Object designator describing the object that should be picked up
+    """
+
+    arm: str
+    """
+    The arm that should be used for pick up
+    """
+
+    grasp: str
+    """
+    The grasp that should be used. For example, 'left' or 'right'
+    """
+
+    object_at_execution: Optional[ObjectDesignatorDescription.Object] = field(init=False)
+    """
+    The object at the time this Action got created. It is used to be a static, information holding entity. It is
+    not updated when the BulletWorld object is changed.
+    """
+
+    def perform(self) -> None:
+        """ Performs the action"""
+        pass
+
+
+@dataclass
+class PlaceActionPerformable(ActionAbstract):
+    """
+    Places an Object at a position using an arm.
+    """
+
+    object_designator: ObjectDesignatorDescription.Object
+    """
+    Object designator describing the object that should be place
+    """
+    arm: str
+    """
+    Arm that is currently holding the object
+    """
+    target_location: Pose
+    """
+    Pose in the world at which the object should be placed
+    """
+    def perform(self) -> None:
+        """ Performs the action """
+        pass
+
+@dataclass
+class NavigateActionPerformable(ActionAbstract):
+    """
+    Navigates the Robot to a position.
+    """
+
+    target_location: Pose
+    """
+    Location to which the robot should be navigated
+    """
+    def perform(self) -> None:
+        """ Performs the action """
+        pass

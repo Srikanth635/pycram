@@ -1,0 +1,19 @@
+
+ # World Level Functions
+
+ <World>.get_object_by_name(self, name: str) -> Object or List[Object]
+ 'Returns a list of all Objects in this World with the same name as the given one.'
+
+ <World>.get_object_by_id(self, obj_id: int) -> Object or List[Object]
+ 'Returns the single Object that has the unique id.'
+
+ <World>.objects -> List[Object]
+ 'Returns all the objects from the world'
+
+ # Object Level Functions
+
+<Object>.pose(self)
+'Gets the pose of the Object'
+
+ <Object>.get_position(self)
+ 'Gets the position of the object'

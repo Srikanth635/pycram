@@ -1,0 +1,64 @@
+{'floor': ObjectState(pose=header:
+   seq: 0
+   stamp:
+     secs: 1725544214
+     nsecs: 368848800
+   frame_id: "map"
+ pose:
+   position:
+     x: 0.0
+     y: 0.0
+     z: 0.0
+   orientation:
+     x: 0.0
+     y: 0.0
+     z: 0.0
+     w: 1.0, attachments={}, link_states={-1: LinkState(constraint_ids={})}, joint_states={}),
+ 'pr2': ObjectState(pose=header:
+   seq: 0
+   stamp:
+     secs: 1725544229
+     nsecs:  91965675
+   frame_id: "map"
+ pose:
+   position:
+     x: 0.0
+     y: 0.0
+     z: 0.0
+   orientation:
+     x: 0.0
+     y: 0.0
+     z: 0.0
+     w: 1.0, attachments={}, link_states={0: LinkState(constraint_ids={}), 1: LinkState(constraint_ids={}), 2: LinkState(constraint_ids={}), 3: LinkState(constraint_ids={}), 4: LinkState(constraint_ids={}), 5: LinkState(constraint_ids={}), 6: LinkState(constraint_ids={}), 7: LinkState(constraint_ids={}), 8: LinkState(constraint_ids={}), 9: LinkState(constraint_ids={}), 10: LinkState(constraint_ids={}), 11: LinkState(constraint_ids={}), 12: LinkState(constraint_ids={}), 13: LinkState(constraint_ids={}), 14: LinkState(constraint_ids={}), 15: LinkState(constraint_ids={}), 16: LinkState(constraint_ids={}), 17: LinkState(constraint_ids={}), 18: LinkState(constraint_ids={}), 19: LinkState(constraint_ids={}), 20: LinkState(constraint_ids={}), 21: LinkState(constraint_ids={}), 22: LinkState(constraint_ids={}), 23: LinkState(constraint_ids={}), 24: LinkState(constraint_ids={}), 25: LinkState(constraint_ids={}), 26: LinkState(constraint_ids={}), 27: LinkState(constraint_ids={}), 28: LinkState(constraint_ids={}), 29: LinkState(constraint_ids={}), 30: LinkState(constraint_ids={}), 31: LinkState(constraint_ids={}), 32: LinkState(constraint_ids={}), 33: LinkState(constraint_ids={}), 34: LinkState(constraint_ids={}), 35: LinkState(constraint_ids={}), 36: LinkState(constraint_ids={}), 37: LinkState(constraint_ids={}), 38: LinkState(constraint_ids={}), 39: LinkState(constraint_ids={}), 40: LinkState(constraint_ids={}), 41: LinkState(constraint_ids={}), 42: LinkState(constraint_ids={}), 43: LinkState(constraint_ids={}), 44: LinkState(constraint_ids={}), 45: LinkState(constraint_ids={}), 46: LinkState(constraint_ids={}), 47: LinkState(constraint_ids={}), 48: LinkState(constraint_ids={}), 49: LinkState(constraint_ids={}), 50: LinkState(constraint_ids={}), 51: LinkState(constraint_ids={}), 52: LinkState(constraint_ids={}), 53: LinkState(constraint_ids={}), 54: LinkState(constraint_ids={}), 55: LinkState(constraint_ids={}), 56: LinkState(constraint_ids={}), 57: LinkState(constraint_ids={}), 58: LinkState(constraint_ids={}), 59: LinkState(constraint_ids={}), 60: LinkState(constraint_ids={}), 61: LinkState(constraint_ids={}), 62: LinkState(constraint_ids={}), 63: LinkState(constraint_ids={}), 64: LinkState(constraint_ids={}), 65: LinkState(constraint_ids={}), 66: LinkState(constraint_ids={}), 67: LinkState(constraint_ids={}), 68: LinkState(constraint_ids={}), 69: LinkState(constraint_ids={}), 70: LinkState(constraint_ids={}), 71: LinkState(constraint_ids={}), 72: LinkState(constraint_ids={}), 73: LinkState(constraint_ids={}), 74: LinkState(constraint_ids={}), 75: LinkState(constraint_ids={}), 76: LinkState(constraint_ids={}), 77: LinkState(constraint_ids={}), 78: LinkState(constraint_ids={}), 79: LinkState(constraint_ids={}), 80: LinkState(constraint_ids={}), 81: LinkState(constraint_ids={}), 82: LinkState(constraint_ids={}), 83: LinkState(constraint_ids={}), 84: LinkState(constraint_ids={}), 85: LinkState(constraint_ids={}), 86: LinkState(constraint_ids={}), -1: LinkState(constraint_ids={})}, joint_states={0: JointState(position=0.0), 1: JointState(position=0.0), 2: JointState(position=0.0), 3: JointState(position=0.0), 4: JointState(position=0.0), 5: JointState(position=0.0), 6: JointState(position=0.0), 7: JointState(position=0.0), 8: JointState(position=0.0), 9: JointState(position=0.0), 10: JointState(position=0.0), 11: JointState(position=0.0), 12: JointState(position=0.0), 13: JointState(position=0.0), 14: JointState(position=0.0), 15: JointState(position=0.0), 16: JointState(position=0.0), 17: JointState(position=0.0), 18: JointState(position=0.0), 19: JointState(position=0.0), 20: JointState(position=0.0), 21: JointState(position=0.0), 22: JointState(position=0.0), 23: JointState(position=0.0), 24: JointState(position=0.0), 25: JointState(position=0.0), 26: JointState(position=0.0), 27: JointState(position=0.0), 28: JointState(position=0.0), 29: JointState(position=0.0), 30: JointState(position=0.0), 31: JointState(position=0.0), 32: JointState(position=0.0), 33: JointState(position=0.0), 34: JointState(position=0.0), 35: JointState(position=0.0), 36: JointState(position=0.0), 37: JointState(position=0.0), 38: JointState(position=0.0), 39: JointState(position=0.0), 40: JointState(position=0.0), 41: JointState(position=0.0), 42: JointState(position=0.0), 43: JointState(position=0.0), 44: JointState(position=0.0), 45: JointState(position=0.0), 46: JointState(position=0.0), 47: JointState(position=0.0), 48: JointState(position=0.0), 49: JointState(position=0.0), 50: JointState(position=0.0), 51: JointState(position=0.0), 52: JointState(position=0.0), 53: JointState(position=0.0), 54: JointState(position=0.0), 55: JointState(position=0.0), 56: JointState(position=0.0), 57: JointState(position=0.0), 58: JointState(position=0.0), 59: JointState(position=0.0), 60: JointState(position=0.0), 61: JointState(position=0.0), 62: JointState(position=0.0), 63: JointState(position=0.0), 64: JointState(position=0.0), 65: JointState(position=0.0), 66: JointState(position=0.0), 67: JointState(position=0.0), 68: JointState(position=0.0), 69: JointState(position=0.0), 70: JointState(position=0.0), 71: JointState(position=0.0), 72: JointState(position=0.0), 73: JointState(position=0.0), 74: JointState(position=0.0), 75: JointState(position=0.0), 76: JointState(position=0.0), 77: JointState(position=0.0), 78: JointState(position=0.0), 79: JointState(position=0.0), 80: JointState(position=0.0), 81: JointState(position=0.0), 82: JointState(position=0.0), 83: JointState(position=0.0), 84: JointState(position=0.0), 85: JointState(position=0.0), 86: JointState(position=0.0)}),
+ 'milk2': ObjectState(pose=header:
+   seq: 0
+   stamp:
+     secs: 1725544232
+     nsecs: 137754440
+   frame_id: "map"
+ pose:
+   position:
+     x: 1.3
+     y: 1.0
+     z: 3.9
+   orientation:
+     x: 0.0
+     y: 0.0
+     z: 0.0
+     w: 1.0, attachments={}, link_states={-1: LinkState(constraint_ids={})}, joint_states={}),
+ 'milk': ObjectState(pose=header:
+   seq: 0
+   stamp:
+     secs: 1725544232
+     nsecs: 252665996
+   frame_id: "map"
+ pose:
+   position:
+     x: 1.3
+     y: 1.0
+     z: 0.9
+   orientation:
+     x: 0.0
+     y: 0.0
+     z: 0.0
+     w: 1.0, attachments={}, link_states={-1: LinkState(constraint_ids={})}, joint_states={})}
