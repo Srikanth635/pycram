@@ -8,8 +8,9 @@ from pycram.datastructures.enums import ObjectType, WorldMode
 from rospy import sleep
 from openai import OpenAI
 import json
+import os
 
-openai_api_key = ""
+openai_api_key = os.environ["OPENAI_API_KEY"]
 # OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 OPENAI_API_KEY = openai_api_key
 client = OpenAI(api_key=OPENAI_API_KEY)

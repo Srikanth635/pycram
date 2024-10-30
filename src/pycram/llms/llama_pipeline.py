@@ -6,7 +6,9 @@ from llama_index.core.query_engine import RetrieverQueryEngine
 from llama_index.core.indices.postprocessor import SimilarityPostprocessor
 from llama_index.core.response.pprint_utils import pprint_response
 import openai
-k = ""
+import os
+
+k = os.environ["OPENAI_API_KEY"]
 openai.api_key = k
 
 documents = SimpleDirectoryReader("/home/malineni/ROS_WS/tpycram_ws/src/pycram/src/pycram/llms/resources_pdf").load_data()

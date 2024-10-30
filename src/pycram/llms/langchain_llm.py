@@ -3,8 +3,9 @@ from langchain_openai.chat_models import ChatOpenAI
 from langchain.schema import HumanMessage
 from langchain.prompts import PromptTemplate, ChatPromptTemplate
 from langchain_ollama.llms import OllamaLLM
+import os
 
-k = ""
+k = os.environ["OPENAI_API_KEY"]
 
 llm = OpenAI(
     temperature=0.9,
